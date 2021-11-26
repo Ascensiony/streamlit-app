@@ -3,7 +3,7 @@ import PIL.Image
 
 import os
 
-from interface import display_matches, display_text_head
+from interface import display_matches
 from helpers import load_image, resize, get_random_image_file, cache_on_button_press
 from call_api import call_text_endpoint, call_photo_endpoint, call_hybrid_endpoint, call_greetings_endpoint
 

@@ -15,6 +15,7 @@ def encode_image(image_query):
     return base64.b64encode(buffered.getvalue())
 
 
+@st.cache(ttl=3600)
 def call_text_endpoint(text_query: str, endpoint: str):
     data = json.dumps({"text_query": text_query})
     endpoint += "/api/v1/text"
@@ -23,6 +24,7 @@ def call_text_endpoint(text_query: str, endpoint: str):
     return response
 
 
+@st.cache(ttl=3600)
 def call_photo_endpoint(image_query, endpoint: str):
     enc_image = encode_image(image_query)
 
@@ -33,6 +35,7 @@ def call_photo_endpoint(image_query, endpoint: str):
     return response
 
 
+@st.cache(ttl=3600)
 def call_hybrid_endpoint(text_query, image_query, image_weight, endpoint: str):
     enc_image = encode_image(image_query)
 

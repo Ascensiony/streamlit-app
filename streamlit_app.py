@@ -3,11 +3,11 @@ import PIL.Image
 
 import os
 
-from interface import display_matches
+from interface import display_matches, display_text_head
 from helpers import load_image, resize, get_random_image_file, cache_on_button_press
 from call_api import call_text_endpoint, call_photo_endpoint, call_hybrid_endpoint, call_greetings_endpoint
 
-app_formal_name = "Image Search Application"
+app_formal_name = "Image Search Engine"
 
 # Set default endpoint. Usually this would be passed to a function via a parameter
 DEFAULT_ENDPOINT = "http://127.0.0.1:8080"
@@ -28,9 +28,9 @@ def main():
     )
 
     st.sidebar.markdown(f"{app_formal_name}")
-    st.sidebar.markdown(
-        f"Images are sourced from the [Unsplash dataset](https://github.com/unsplash/datasets)"
-    )
+    # st.sidebar.markdown(
+    #     f"Images are sourced from the [Unsplash dataset](https://github.com/unsplash/datasets)"
+    # )
 
     DEFAULT_ENDPOINT = st.text_input("Endpoint", DEFAULT_ENDPOINT)
 
@@ -45,7 +45,9 @@ def main():
 
 
 def textq_search():
-    st.title("Image Similarity Search with ✍️")
+    st.title("Search Images with Text 📝")
+
+    # display_text_head()
 
     submitted = False
     matching_ids = []
@@ -53,7 +55,7 @@ def textq_search():
     with st.form("text_search_form"):
         text_query = st.text_input(label='Enter the query', max_chars=70)
         k = st.slider("Number of Images to retrieve",
-                      min_value=1, max_value=15, value=6)
+                      min_value=1, max_value=20, value=6)
         submitted = st.form_submit_button("Search")
         if submitted:
             with st.spinner('Calling API Endpoint'):
@@ -73,7 +75,7 @@ def textq_search():
 
 
 def imageq_search():
-    st.title("Image Similarity Search with 📷")
+    st.title("Search Images with photo 🖼️")
 
     submitted = False
     matching_ids = []
@@ -82,7 +84,6 @@ def imageq_search():
         col1, col2 = st.columns(2)
 
         with col1:
-            # st.write("Choose from the gallery:")
             image = load_image(
                 ROOT_DIR + get_random_image_file("./cached_images"))
 
@@ -95,7 +96,7 @@ def imageq_search():
             st.image(resize(image, 400))
 
         k = st.slider("Number of Images to retrieve",
-                      min_value=1, max_value=15, value=6)
+                      min_value=1, max_value=20, value=6)
 
         # Every form must have a submit button.
         submitted = st.form_submit_button("Search")
@@ -117,7 +118,7 @@ def imageq_search():
 
 
 def hybridq_search():
-    st.title("Image Similarity Search with ✍️ & 📷")
+    st.title("Search Images with Text 📝 and Photo 🖼️")
 
     submitted = False
     matching_ids = []
@@ -126,7 +127,6 @@ def hybridq_search():
         col1, col2 = st.columns(2)
 
         with col1:
-            # st.write("Choose from the gallery:")
             image = load_image(
                 ROOT_DIR + get_random_image_file("./cached_images"))
 
@@ -193,17 +193,3 @@ if __name__ == "__main__":
         initial_sidebar_state="expanded",
     )
     main()
-
-
-# defualts for testing
-# matching_ids = [
-#     "ITtjpF5IPdA",
-#     "5TpBhNBPAE8",
-#     "2-phOrgQnuY",
-#     "O_uHS1bru2k",
-#     "6ppUnVEUHpU",
-#     "B4XBE_W8sJI",
-#     "LlELOJhKCdY",
-#     "T__ouoJ7ojA",
-#     "UBXoGdfGCnE",
-# ]

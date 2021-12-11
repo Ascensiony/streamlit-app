@@ -4,8 +4,6 @@ import PIL.Image
 import os
 import asyncio
 
-import SessionState
-
 from interface import display_matches
 from helpers import load_image, resize, get_random_image_file
 from call_api import call_text_endpoint, call_photo_endpoint, call_hybrid_endpoint, call_greetings_endpoint

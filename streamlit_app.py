@@ -2,9 +2,12 @@ import streamlit as st
 import PIL.Image
 
 import os
+import asyncio
+
+import SessionState
 
 from interface import display_matches
-from helpers import load_image, resize, get_random_image_file, cache_on_button_press
+from helpers import load_image, resize, get_random_image_file
 from call_api import call_text_endpoint, call_photo_endpoint, call_hybrid_endpoint, call_greetings_endpoint
 
 app_formal_name = "Image Search Engine"
@@ -44,13 +47,19 @@ def main():
         api_test()
 
 
+async def call_recommender_api():
+    r = await asyncio.sleep(0.5)
+    # response = call_ankit_api(text_query)
+    # reformulated_queries = response.json()['reform_queries']
+    return ["they search for this", "they search for that", "and this too"]
+
+
 def textq_search():
     st.title("Search Images with Text 📝")
 
-    # display_text_head()
-
     submitted = False
     matching_ids = []
+    reformulated_queries = []
 
     with st.form("text_search_form"):
         text_query = st.text_input(label='Enter the query', max_chars=70)
@@ -58,7 +67,9 @@ def textq_search():
                       min_value=1, max_value=20, value=6)
         submitted = st.form_submit_button("Search")
         if submitted:
-            with st.spinner('Calling API Endpoint'):
+            reformulated_queries = asyncio.run(call_recommender_api())
+
+            with st.spinner('Searching'):
                 response = call_text_endpoint(text_query, DEFAULT_ENDPOINT)
 
             if response.ok:
@@ -71,6 +82,9 @@ def textq_search():
     if submitted:
         st.markdown("***")
         st.balloons()
+        st.markdown(
+            f"""**People also search for:** `{"` `".join(reformulated_queries)}`""")
+        # st.markdown(f"""`{"`         `".join(reformulated_queries)}`""")
         display_matches(matching_ids, css0, css1)
 
 
@@ -101,7 +115,7 @@ def imageq_search():
         # Every form must have a submit button.
         submitted = st.form_submit_button("Search")
         if submitted:
-            with st.spinner('Calling API Endpoint'):
+            with st.spinner('Searching'):
                 response = call_photo_endpoint(image, DEFAULT_ENDPOINT)
 
             if response.ok:
@@ -152,7 +166,7 @@ def hybridq_search():
         # Every form must have a submit button.
         submitted = st.form_submit_button("Search")
         if submitted:
-            with st.spinner('Calling API Endpoint'):
+            with st.spinner('Searching'):
                 response = call_hybrid_endpoint(
                     text_query, image, image_weight, DEFAULT_ENDPOINT)
 

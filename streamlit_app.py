@@ -6,12 +6,12 @@ import asyncio
 
 from interface import display_matches
 from helpers import load_image, resize, get_random_image_file
-from call_api import call_text_endpoint, call_photo_endpoint, call_hybrid_endpoint, call_greetings_endpoint
+from call_api import call_text_endpoint, call_photo_endpoint, call_hybrid_endpoint, call_greetings_endpoint, call_recommender_api
 
 app_formal_name = "Image Search Engine"
 
 # Set default endpoint. Usually this would be passed to a function via a parameter
-DEFAULT_ENDPOINT = "http://127.0.0.1:8080"
+DEFAULT_ENDPOINT = st.secrets["DEFAULT_ENDPOINT"]
 
 ROOT_DIR = os.path.dirname(os.path.abspath(__file__))
 
@@ -45,13 +45,6 @@ def main():
         api_test()
 
 
-async def call_recommender_api():
-    r = await asyncio.sleep(0.5)
-    # response = call_ankit_api(text_query)
-    # reformulated_queries = response.json()['reform_queries']
-    return ["they search for this", "they search for that", "and this too"]
-
-
 def textq_search():
     st.title("Search Images with Text 📝")
 
@@ -65,7 +58,8 @@ def textq_search():
                       min_value=1, max_value=20, value=6)
         submitted = st.form_submit_button("Search")
         if submitted:
-            reformulated_queries = asyncio.run(call_recommender_api())
+            reformulated_queries = asyncio.run(
+                call_recommender_api(text_query))
 
             with st.spinner('Searching'):
                 response = call_text_endpoint(text_query, DEFAULT_ENDPOINT)
@@ -80,9 +74,10 @@ def textq_search():
     if submitted:
         st.markdown("***")
         st.balloons()
-        st.markdown(
-            f"""**People also search for:** `{"` `".join(reformulated_queries)}`""")
-        # st.markdown(f"""`{"`         `".join(reformulated_queries)}`""")
+        if reformulated_queries:
+            st.markdown(
+                f"""**People also search for:** `{"` `".join(reformulated_queries)}`""")
+            # st.markdown(f"""`{"`         `".join(reformulated_queries)}`""")
         display_matches(matching_ids, css0, css1)
 
 

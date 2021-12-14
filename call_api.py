@@ -47,6 +47,18 @@ def call_hybrid_endpoint(text_query, image_query, image_weight, endpoint: str):
     return response
 
 
+async def call_recommender_api(text_query: str):
+    data = json.dumps({"query": text_query})
+    endpoint = st.secrets["RECOMMENDER_ENDPOINT"]
+    response = requests.post(endpoint, data, headers=HEADERS)
+
+    print()
+
+    if response.ok:
+        return response.json()[:3]
+    return []
+
+
 def call_greetings_endpoint(endpoint: str):
     endpoint += "/api/v1/hello"
     response = requests.get(endpoint, headers={"accept": "application/json"})

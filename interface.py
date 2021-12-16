@@ -1,6 +1,7 @@
 import streamlit as st
 import base64
 
+
 def display_matches(matching_ids, css0, css1):
     divs = [
         f"""

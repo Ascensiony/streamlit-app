@@ -55,7 +55,7 @@ async def call_recommender_api(text_query: str):
     print()
 
     if response.ok:
-        if len(response.json() >= 3):
+        if len(response.json()) >= 3:
             return response.json()[:3]
         return response.json()
     return []

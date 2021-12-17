@@ -37,6 +37,8 @@ def main():
     st.sidebar.markdown(f"{app_formal_name}")
 
     DEFAULT_ENDPOINT = st.text_input("Endpoint", DEFAULT_ENDPOINT)
+    
+    st.error("This app has been closed by the authors! Please contant them if you have any queries")
 
     if selected_box == "Text Query":
         textq_search()
